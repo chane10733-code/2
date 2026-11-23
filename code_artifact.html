@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>雲端上的青春曙光——七月高山露營記</title>
+
+  <!-- 載入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- 載入 Google Fonts：思源宋體 (Noto Serif TC) 與 思源黑體 (Noto Sans TC) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;600;700;900&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Noto Serif TC"', 'serif'],
+            sans: ['"Noto Sans TC"', 'sans-serif'],
+          },
+          colors: {
+            paper: '#FAF7F2',
+            ink: '#1E242B',
+            dawnGold: '#E89B2D',
+            deepRidge: '#131B2E',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* 自訂基礎樣式與流暢動畫 */
+    :root {
+      --sky-top: #070B19;
+      --sky-mid: #162447;
+      --sky-bottom: #D97706;
+      --ambient-tint: rgba(250, 247, 242, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background-color: #F6F2EA;
+      color: #1E242B;
+      transition: background-color 0.4s ease;
+    }
+
+    /* 雲海緩慢漂浮動畫 */
+    @keyframes cloudDriftSlow {
+      0%, 100% { transform: translateX(-14px); }
+      50% { transform: translateX(14px); }
+    }
+
+    @keyframes cloudDriftReverse {
+      0%, 100% { transform: translateX(16px); }
+      50% { transform: translateX(-16px); }
+    }
+
+    /* 星光閃爍動畫 */
+    @keyframes starTwinkle {
+      0%, 100% { opacity: 0.9; transform: scale(1); }
+      50% { opacity: 0.25; transform: scale(0.8); }
+    }
+
+    /* 晨光脈動光暈 */
+    @keyframes sunPulse {
+      0%, 100% { opacity: 0.45; transform: scale(1); }
+      50% { opacity: 0.75; transform: scale(1.06); }
+    }
+
+    .animate-cloud-slow {
+      animation: cloudDriftSlow 11s ease-in-out infinite;
+    }
+
+    .animate-cloud-reverse {
+      animation: cloudDriftReverse 14s ease-in-out infinite;
+    }
+
+    .animate-twinkle-1 {
+      animation: starTwinkle 3.2s ease-in-out infinite;
+    }
+
+    .animate-twinkle-2 {
+      animation: starTwinkle 4.5s ease-in-out infinite 1.1s;
+    }
+
+    .animate-sun-pulse {
+      transform-origin: center;
+      animation: sunPulse 5s ease-in-out infinite;
+    }
+
+    /* 自訂日出滑桿樣式 */
+    input[type="range"].dawn-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #0F172A 0%, #1E3A8A 45%, #F59E0B 80%, #FDE047 100%);
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"].dawn-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #FFFBEB;
+      border: 3px solid #D97706;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.75);
+      cursor: grab;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input[type="range"].dawn-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.95);
+    }
+
+    input[type="range"].dawn-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #FFFBEB;
+      border: 3px solid #D97706;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.75);
+      cursor: grab;
+    }
+
+    /* 首字下沉與雜誌排版微調 */
+    .editorial-dropcap::first-letter {
+      font-family: 'Noto Serif TC', serif;
+      font-weight: 700;
+      font-size: 2.75rem;
+      line-height: 1;
+      float: left;
+      margin-right: 0.65rem;
+      margin-top: 0.15rem;
+      color: #B45309;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-950">
+
+  <!-- ==================== 頂部 HERO 橫幅 ==================== -->
+  <header id="heroHeader" class="relative overflow-hidden text-white transition-all duration-300"
+          style="background: linear-gradient(180deg, #070B19 0%, #172554 48%, #B45309 85%, #F59E0B 100%);">
+
+    <!-- Hero 背景動態 SVG 星空與遠山剪影 -->
+    <div class="absolute inset-0 pointer-events-none">
+      <svg class="w-full h-full object-cover" viewBox="0 0 1440 560" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <radialGradient id="heroSunGlow" cx="50%" cy="78%" r="45%">
+            <stop offset="0%" stop-color="#FEF08A" stop-opacity="0.95" />
+            <stop offset="35%" stop-color="#F59E0B" stop-opacity="0.55" />
+            <stop offset="100%" stop-color="#F59E0B" stop-opacity="0" />
+          </radialGradient>
+          <linearGradient id="heroMountainBack" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#1E293B" stop-opacity="0.75" />
+            <stop offset="100%" stop-color="#0F172A" stop-opacity="0.95" />
+          </linearGradient>
+          <linearGradient id="heroMountainFront" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#0F172A" />
+            <stop offset="100%" stop-color="#060913" />
+          </linearGradient>
+        </defs>
+
+        <!-- 星空群組（隨滑桿漸隱） -->
+        <g id="heroStarsGroup" class="transition-opacity duration-300" opacity="0.65">
+          <circle cx="140" cy="75" r="1.6" fill="#FFFFFF" class="animate-twinkle-1" />
+          <circle cx="290" cy="120" r="1.2" fill="#E0F2FE" class="animate-twinkle-2" />
+          <circle cx="430" cy="60" r="2" fill="#FEF9C3" class="animate-twinkle-1" />
+          <circle cx="620" cy="95" r="1.4" fill="#FFFFFF" class="animate-twinkle-2" />
+          <circle cx="810" cy="55" r="1.8" fill="#E0F2FE" class="animate-twinkle-1" />
+          <circle cx="980" cy="110" r="1.3" fill="#FFFFFF" class="animate-twinkle-2" />
+          <circle cx="1160" cy="70" r="2.1" fill="#FEF08A" class="animate-twinkle-1" />
+          <circle cx="1310" cy="130" r="1.5" fill="#FFFFFF" class="animate-twinkle-2" />
+          <circle cx="210" cy="185" r="1.1" fill="#CBD5E1" />
+          <circle cx="1060" cy="175" r="1.2" fill="#CBD5E1" />
+        </g>
+
+        <!-- 晨曦光暈與太陽（隨滑桿升降） -->
+        <g id="heroSunGroup" transform="translate(0, 15)">
+          <circle cx="720" cy="435" r="240" fill="url(#heroSunGlow)" class="animate-sun-pulse" />
+          <circle id="heroSunDisc" cx="720" cy="435" r="46" fill="#FEF3C7" opacity="0.9" />
+        </g>
+
+        <!-- 遠景層巒 -->
+        <path d="M0,450 L180,365 L350,415 L540,335 L720,395 L910,325 L1120,400 L1290,350 L1440,410 L1440,560 L0,560 Z"
+              fill="url(#heroMountainBack)" />
+
+        <!-- 雲海層（柔和漂浮） -->
+        <g class="animate-cloud-slow" opacity="0.88">
+          <path d="M-60,465 Q120,425 280,455 T620,450 T960,460 T1320,445 T1520,465 L1520,560 L-60,560 Z"
+                fill="#FDE68A" fill-opacity="0.28" />
+        </g>
+        <g class="animate-cloud-reverse" opacity="0.92">
+          <path d="M-60,490 Q180,460 390,485 T780,475 T1150,490 T1520,470 L1520,560 L-60,560 Z"
+                fill="#FFFBEB" fill-opacity="0.35" />
+        </g>
+
+        <!-- 近景山脊剪影 -->
+        <path d="M0,515 L230,455 L460,505 L720,465 L980,510 L1220,460 L1440,500 L1440,560 L0,560 Z"
+              fill="url(#heroMountainFront)" />
+      </svg>
+    </div>
+
+    <!-- Hero 雜誌標頭與主標題內容 -->
+    <div class="relative z-10 max-w-4xl mx-auto px-6 pt-12 pb-24 sm:pt-16 sm:pb-28 text-center">
+      <!-- 雜誌期號標籤 -->
+      <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs sm:text-sm tracking-[0.2em] uppercase text-amber-200 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-300 animate-ping"></span>
+        <span>SUMMER ALPINE JOURNAL · 七月高山露營隨筆</span>
+      </div>
+
+      <!-- 主標題 -->
+      <h1 class="font-serif text-3xl sm:text-5xl md:text-6xl font-black tracking-wide leading-tight text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.45)]">
+        雲端上的青春曙光
+        <span class="block mt-2 sm:mt-3 text-xl sm:text-3xl md:text-4xl font-semibold text-amber-200 tracking-widest">
+          ——七月高山露營記
+        </span>
+      </h1>
+
+      <!-- 詩意副標導言 -->
+      <p class="mt-6 max-w-xl mx-auto text-sm sm:text-base text-slate-200/90 leading-relaxed font-light tracking-wider">
+        從凌晨三點的刺骨寒風，到雲海交界處的第一道金黃晨光；<br class="hidden sm:inline" />
+        一場關於堅持、震撼與青春印記的高山行旅。
+      </p>
+
+      <!-- 快速閱讀與資訊膠囊 -->
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs text-amber-100/90">
+        <span class="px-3.5 py-1.5 rounded-full bg-black/25 backdrop-blur-sm border border-white/15">
+          🕒 凌晨 03:00 啟程
+        </span>
+        <span class="px-3.5 py-1.5 rounded-full bg-black/25 backdrop-blur-sm border border-white/15">
+          ☁️ 高山雲海日出
+        </span>
+        <a href="#word-stats" class="px-3.5 py-1.5 rounded-full bg-amber-500/30 hover:bg-amber-500/45 transition backdrop-blur-sm border border-amber-300/30">
+          📝 全文 352 字（含標點）↓
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== 互動式「日出時刻滑桿 / 氛圍切換器」 ==================== -->
+  <section aria-label="日出時刻氛圍控制器" class="sticky top-3 z-30 max-w-4xl mx-auto px-4 -mt-9 mb-10">
+    <div class="rounded-2xl bg-white/90 backdrop-blur-xl shadow-[0_12px_36px_-8px_rgba(15,23,42,0.18)] border border-amber-900/10 p-4 sm:p-5">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+
+        <!-- 左側：當前時刻顯示 -->
+        <div class="flex items-center gap-3">
+          <div id="timeIconBadge" class="w-11 h-11 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shadow-inner shrink-0 transition-colors duration-300">
+            🌅
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-medium tracking-wider uppercase text-amber-700">互動光影氛圍</span>
+              <span id="timePhaseTag" class="px-2 py-0.5 text-[11px] font-semibold rounded-full bg-amber-100 text-amber-800">
+                破曉微曦
+              </span>
+            </div>
+            <p id="timePhaseDesc" class="text-sm font-serif font-bold text-slate-800 mt-0.5">
+              04:45 AM — 天邊由墨黑轉為深藍，泛起金黃晨光
+            </p>
+          </div>
+        </div>
+
+        <!-- 中間：日出時刻滑桿 -->
+        <div class="flex-1 max-w-md w-full">
+          <div class="flex justify-between text-[11px] font-medium text-slate-500 mb-1.5 px-0.5">
+            <button type="button" onclick="setDawnProgress(0)" class="hover:text-slate-900 transition cursor-pointer">03:00 墨黑</button>
+            <button type="button" onclick="setDawnProgress(50)" class="hover:text-blue-800 transition cursor-pointer">04:45 深藍</button>
+            <button type="button" onclick="setDawnProgress(100)" class="hover:text-amber-700 transition cursor-pointer">05:20 金黃</button>
+          </div>
+          <input id="dawnSlider" type="range" min="0" max="100" value="65" aria-label="日出時刻滑桿" class="w-full dawn-slider" />
+        </div>
+
+        <!-- 右側：快捷按鈕與縮時播放 -->
+        <div class="flex items-center gap-2 self-end md:self-center">
+          <button id="timelapseBtn" type="button" onclick="toggleTimelapse()"
+                  class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-900 text-amber-200 hover:bg-slate-800 active:scale-95 transition shadow-sm cursor-pointer">
+            <span id="timelapseIcon">▶</span>
+            <span id="timelapseText">日出縮時</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 主要散文與插畫內容區 ==================== -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 pb-20 space-y-14 sm:space-y-20">
+
+    <!-- 文章導讀分隔線 -->
+    <div class="flex items-center justify-center gap-4 text-amber-800/60">
+      <span class="h-px w-12 sm:w-20 bg-amber-800/25"></span>
+      <span class="font-serif text-xs sm:text-sm tracking-[0.3em]">三幕山林光影錄</span>
+      <span class="h-px w-12 sm:w-20 bg-amber-800/25"></span>
+    </div>
+
+    <article id="essayArticle" class="space-y-14 sm:space-y-20">
+
+      <!-- ==================== 第一幕：凌晨 03:00・摸黑啟程 ==================== -->
+      <section class="group rounded-3xl bg-white/95 shadow-[0_10px_40px_-15px_rgba(15,23,42,0.1)] border border-stone-200/80 overflow-hidden transition-all duration-300 hover:shadow-[0_18px_50px_-15px_rgba(15,23,42,0.16)]">
+        <!-- 第一幕 SVG 插畫卡片 -->
+        <div class="relative w-full overflow-hidden bg-[#070C1D]">
+          <svg class="w-full h-auto block" viewBox="0 0 900 380" role="img" aria-label="第一幕插畫：凌晨三點摸黑啟程，星空下陡峭山林步道與微光帳篷">
+            <defs>
+              <linearGradient id="scene1Sky" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#050814" />
+                <stop offset="60%" stop-color="#0E1730" />
+                <stop offset="100%" stop-color="#1B2A4A" />
+              </linearGradient>
+              <radialGradient id="tentGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#FBBF24" stop-opacity="0.95" />
+                <stop offset="45%" stop-color="#F59E0B" stop-opacity="0.35" />
+                <stop offset="100%" stop-color="#F59E0B" stop-opacity="0" />
+              </radialGradient>
+              <linearGradient id="moonGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FEF9C3" />
+                <stop offset="100%" stop-color="#93C5FD" />
+              </linearGradient>
+            </defs>
+
+            <!-- 夜空背景 -->
+            <rect width="900" height="380" fill="url(#scene1Sky)" />
+
+            <!-- 滿天星斗與彎月 -->
+            <g id="scene1Stars">
+              <circle cx="110" cy="55" r="1.8" fill="#FFFFFF" class="animate-twinkle-1" />
+              <circle cx="215" cy="92" r="1.3" fill="#BAE6FD" class="animate-twinkle-2" />
+              <circle cx="340" cy="48" r="2.1" fill="#FEF08A" class="animate-twinkle-1" />
+              <circle cx="480" cy="82" r="1.5" fill="#FFFFFF" class="animate-twinkle-2" />
+              <circle cx="610" cy="42" r="1.7" fill="#E0F2FE" class="animate-twinkle-1" />
+              <circle cx="820" cy="95" r="1.4" fill="#FFFFFF" class="animate-twinkle-2" />
+              <circle cx="165" cy="145" r="1.1" fill="#CBD5E1" />
+              <circle cx="545" cy="135" r="1.2" fill="#CBD5E1" />
+
+              <!-- 彎月 -->
+              <path d="M745,52 A24,24 0 1,0 772,82 A19,19 0 1,1 745,52 Z" fill="url(#moonGlow)" opacity="0.9" />
+            </g>
+
+            <!-- 遠處寒霧山巒 -->
+            <path d="M0,250 L160,175 L340,235 L520,155 L710,220 L900,145 L900,380 L0,380 Z" fill="#111C35" />
+
+            <!-- 流動山嵐霧氣 -->
+            <g class="animate-cloud-slow" opacity="0.25">
+              <ellipse cx="280" cy="240" rx="220" ry="22" fill="#94A3B8" />
+              <ellipse cx="660" cy="215" rx="250" ry="25" fill="#94A3B8" />
+            </g>
+
+            <!-- 陡峭主山坡與蜿蜒步道 -->
+            <path d="M0,380 L0,295 Q220,275 430,225 T900,125 L900,380 Z" fill="#0A1020" />
+            <!-- 蜿蜒陡峭石階步道虛線 -->
+            <path d="M195,320 Q285,305 330,285 T475,248 T635,205 T780,162"
+                  fill="none" stroke="#475569" stroke-width="3" stroke-dasharray="6 8" stroke-linecap="round" />
+
+            <!-- 頭燈微光（象徵凌晨摸黑前行的旅人） -->
+            <g>
+              <circle cx="475" cy="244" r="14" fill="#FDE047" opacity="0.25" class="animate-sun-pulse" />
+              <circle cx="475" cy="244" r="3" fill="#FEF9C3" />
+              <polygon points="475,244 515,230 512,248" fill="#FEF08A" opacity="0.22" />
+
+              <circle cx="525" cy="230" r="12" fill="#FDE047" opacity="0.2" class="animate-sun-pulse" />
+              <circle cx="525" cy="230" r="2.6" fill="#FEF9C3" />
+            </g>
+
+            <!-- 營地微光帳篷 -->
+            <g transform="translate(135, 275)">
+              <ellipse cx="35" cy="36" rx="68" ry="26" fill="url(#tentGlow)" />
+              <!-- 帳篷本體 -->
+              <polygon points="35,4 4,38 66,38" fill="#D97706" />
+              <polygon points="35,4 22,38 48,38" fill="#FBBF24" />
+              <!-- 帳篷入口暗影 -->
+              <polygon points="35,16 28,38 42,38" fill="#78350F" />
+            </g>
+
+            <!-- 高山針葉林剪影 -->
+            <g fill="#050811">
+              <polygon points="45,380 65,260 85,380" />
+              <polygon points="48,330 65,245 82,330" />
+              <polygon points="82,380 100,285 118,380" />
+              <polygon points="245,380 268,265 291,380" />
+              <polygon points="250,325 268,245 286,325" />
+              <polygon points="680,380 708,220 736,380" />
+              <polygon points="735,380 760,245 785,380" />
+              <polygon points="815,380 848,195 881,380" />
+            </g>
+          </svg>
+
+          <!-- 插畫角落時光標籤 -->
+          <div class="absolute top-4 left-4 sm:top-5 sm:left-6 px-3.5 py-1.5 rounded-full bg-slate-950/75 backdrop-blur-md border border-slate-700/70 text-xs text-sky-200 flex items-center gap-2">
+            <span>🌌</span>
+            <span class="tracking-wider font-medium">第一幕｜凌晨 03:00・摸黑啟程</span>
+          </div>
+        </div>
+
+        <!-- 第一段散文內容 -->
+        <div class="p-6 sm:p-10 md:p-12">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-4">
+            <span class="font-serif tracking-[0.2em] text-amber-800 font-semibold">CHAPTER 01 · 寒夜啓行</span>
+            <span>本段 116 字</span>
+          </div>
+          <p id="para-1" class="editorial-dropcap font-serif text-lg sm:text-xl md:text-[21px] leading-[2.05] text-slate-800 tracking-wide text-justify">今年暑假最難忘的瞬間，定格在七月那趟臨時起意的高山露營之旅。為了看見傳說中的日出，我們在凌晨三點摸黑出發。清晨的山林帶著濃濃的濕意與涼意，刺骨的寒風不斷吹拂，踩著陡峭的步道，每一步都顯得無比沉重，心中甚至一度冒出想要放棄回頭的念頭。</p>
+        </div>
+      </section>
+
+      <!-- ==================== 第二幕：破曉時分・雲海日出 ==================== -->
+      <section class="group rounded-3xl bg-white/95 shadow-[0_10px_40px_-15px_rgba(180,83,9,0.14)] border border-amber-200/70 overflow-hidden transition-all duration-300 hover:shadow-[0_18px_50px_-15px_rgba(180,83,9,0.22)]">
+        <!-- 第二幕 SVG 插畫卡片（受日出滑桿即時連動） -->
+        <div class="relative w-full overflow-hidden bg-[#1E293B]">
+          <svg class="w-full h-auto block" viewBox="0 0 900 410" role="img" aria-label="第二幕插畫：登上山頂看見太陽如熾熱明珠從翻騰雲海交界處升起，金黃光芒染亮山脈">
+            <defs>
+              <linearGradient id="scene2Sky" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop id="s2SkyTop" offset="0%" stop-color="#1E3A5F" />
+                <stop id="s2SkyMid" offset="52%" stop-color="#D97706" />
+                <stop id="s2SkyBot" offset="100%" stop-color="#FDE68A" />
+              </linearGradient>
+
+              <radialGradient id="scene2SunHalo" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#FFFBEB" stop-opacity="1" />
+                <stop offset="28%" stop-color="#FDE047" stop-opacity="0.85" />
+                <stop offset="62%" stop-color="#F59E0B" stop-opacity="0.35" />
+                <stop offset="100%" stop-color="#F59E0B" stop-opacity="0" />
+              </radialGradient>
+
+              <linearGradient id="goldMountainGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop id="s2MtnRim" offset="0%" stop-color="#FBBF24" />
+                <stop offset="22%" stop-color="#78350F" />
+                <stop offset="100%" stop-color="#1E1B4B" />
+              </linearGradient>
+
+              <linearGradient id="cloudSeaBack" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop id="s2CloudTop" offset="0%" stop-color="#FEF3C7" stop-opacity="0.92" />
+                <stop id="s2CloudBot" offset="100%" stop-color="#F59E0B" stop-opacity="0.55" />
+              </linearGradient>
+
+              <linearGradient id="cloudSeaFront" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#FFFBEB" stop-opacity="0.96" />
+                <stop offset="100%" stop-color="#FDE68A" stop-opacity="0.82" />
+              </linearGradient>
+            </defs>
+
+            <!-- 破曉漸層天空 -->
+            <rect width="900" height="410" fill="url(#scene2Sky)" />
+
+            <!-- 曙光太陽與輻射光芒（位置由日出滑桿控制） -->
+            <g id="scene2SunGroup" transform="translate(0, 0)">
+              <circle cx="450" cy="215" r="210" fill="url(#scene2SunHalo)" class="animate-sun-pulse" />
+              <!-- 放射狀晨光線條 -->
+              <g stroke="#FEF3C7" stroke-width="1.5" opacity="0.32">
+                <line x1="450" y1="215" x2="220" y2="55" />
+                <line x1="450" y1="215" x2="340" y2="25" />
+                <line x1="450" y1="215" x2="450" y2="15" />
+                <line x1="450" y1="215" x2="560" y2="25" />
+                <line x1="450" y1="215" x2="680" y2="55" />
+              </g>
+              <!-- 熾熱明珠太陽本體 -->
+              <circle cx="450" cy="215" r="42" fill="#FFFBEB" />
+              <circle cx="450" cy="215" r="36" fill="#FEF08A" />
+            </g>
+
+            <!-- 遠方層巒山脈（被染成金黃色的稜線） -->
+            <path d="M0,265 L145,180 L285,235 L450,175 L615,230 L765,170 L900,245 L900,410 L0,410 Z"
+                  fill="url(#goldMountainGrad)" />
+
+            <!-- 翻騰雲海（第一層：後景金橘雲海） -->
+            <g class="animate-cloud-slow">
+              <path d="M-50,255 Q70,215 190,245 T430,235 T670,248 T950,230 L950,410 L-50,410 Z"
+                    fill="url(#cloudSeaBack)" />
+            </g>
+
+            <!-- 中景突出的孤峰山脊 -->
+            <path d="M90,340 L235,235 L365,335 Z" fill="#312E81" opacity="0.88" />
+            <path d="M235,235 L268,262 L238,266 Z" fill="#FDE047" opacity="0.85" />
+
+            <path d="M560,345 L705,230 L840,345 Z" fill="#312E81" opacity="0.88" />
+            <path d="M705,230 L674,258 L702,262 Z" fill="#FDE047" opacity="0.85" />
+
+            <!-- 翻騰雲海（第二層：前景潔白金光雲海） -->
+            <g class="animate-cloud-reverse">
+              <path d="M-50,305 Q110,265 260,295 T560,285 T840,300 T960,280 L960,410 L-50,410 Z"
+                    fill="url(#cloudSeaFront)" />
+            </g>
+
+            <!-- 底部雲海柔光過渡 -->
+            <path d="M-40,345 Q200,320 450,342 T940,330 L940,410 L-40,410 Z"
+                  fill="#FFFBEB" opacity="0.92" />
+          </svg>
+
+          <!-- 插畫角落時光標籤 -->
+          <div class="absolute top-4 left-4 sm:top-5 sm:left-6 px-3.5 py-1.5 rounded-full bg-amber-950/70 backdrop-blur-md border border-amber-300/40 text-xs text-amber-100 flex items-center gap-2">
+            <span>☀️</span>
+            <span class="tracking-wider font-medium">第二幕｜破曉時分・雲海日出</span>
+          </div>
+        </div>
+
+        <!-- 第二段散文內容 -->
+        <div class="p-6 sm:p-10 md:p-12">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-4">
+            <span class="font-serif tracking-[0.2em] text-amber-700 font-semibold">CHAPTER 02 · 雲端曙光</span>
+            <span>本段 147 字</span>
+          </div>
+          <p id="para-2" class="editorial-dropcap font-serif text-lg sm:text-xl md:text-[21px] leading-[2.05] text-slate-800 tracking-wide text-justify">然而，當我們終於登上山頂的那一刻，所有的疲憊瞬間煙消雲散。天邊漸漸由墨黑轉為深藍，接著泛起一抹溫暖而耀眼的金黃色晨光。太陽宛如一顆熾熱的明珠，緩緩從翻騰的雲海交界處升起，將整座山脈與我們的臉龐都染成了金黃。那一刻，空氣彷彿凝固了，大家不約而同地屏住呼吸，被眼前這幅震撼人心的大自然畫卷深深感動。</p>
+        </div>
+      </section>
+
+      <!-- ==================== 第三幕：頂峰感悟・青春印記 ==================== -->
+      <section class="group rounded-3xl bg-white/95 shadow-[0_10px_40px_-15px_rgba(15,23,42,0.1)] border border-stone-200/80 overflow-hidden transition-all duration-300 hover:shadow-[0_18px_50px_-15px_rgba(15,23,42,0.16)]">
+        <!-- 第三幕 SVG 插畫卡片 -->
+        <div class="relative w-full overflow-hidden bg-[#FEF3C7]">
+          <svg class="w-full h-auto block" viewBox="0 0 900 360" role="img" aria-label="第三幕插畫：立於雲海之巔的旅人剪影與溫暖晨曦光暈">
+            <defs>
+              <linearGradient id="scene3Sky" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FDE68A" />
+                <stop offset="50%" stop-color="#FDBA74" />
+                <stop offset="100%" stop-color="#FB923C" />
+              </linearGradient>
+              <radialGradient id="scene3SunSpot" cx="28%" cy="35%" r="55%">
+                <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+                <stop offset="40%" stop-color="#FEF08A" stop-opacity="0.55" />
+                <stop offset="100%" stop-color="#F59E0B" stop-opacity="0" />
+              </radialGradient>
+              <linearGradient id="summitRock" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#451A03" />
+                <stop offset="100%" stop-color="#1C1917" />
+              </linearGradient>
+            </defs>
+
+            <!-- 溫暖金黃晨曦背景 -->
+            <rect width="900" height="360" fill="url(#scene3Sky)" />
+            <rect width="900" height="360" fill="url(#scene3SunSpot)" />
+
+            <!-- 遠山與綿延雲海 -->
+            <path d="M0,245 L180,190 L370,240 L580,185 L780,235 L900,200 L900,360 L0,360 Z"
+                  fill="#B45309" opacity="0.28" />
+
+            <g class="animate-cloud-slow">
+              <path d="M-40,260 Q160,225 360,255 T760,245 T960,260 L960,360 L-40,360 Z"
+                    fill="#FFFBEB" opacity="0.72" />
+            </g>
+
+            <!-- 頂峰岩石剪影 -->
+            <path d="M460,360 L545,255 L635,232 L725,248 L845,360 Z" fill="url(#summitRock)" />
+            <!-- 岩石受光金色邊緣 -->
+            <path d="M545,255 L635,232 L618,242 L552,262 Z" fill="#FDE047" opacity="0.65" />
+
+            <!-- 並肩立於頂峰的旅人剪影（象徵青春與陪伴） -->
+            <g transform="translate(612, 182)" fill="#1C1917">
+              <!-- 旅人 A -->
+              <circle cx="14" cy="10" r="6.5" />
+              <path d="M6,20 Q14,18 22,20 L24,38 L19,38 L18,54 L10,54 L9,38 L4,38 Z" />
+              <!-- 舉手指向遠方曙光的手臂 -->
+              <path d="M6,22 L-6,12 L-3,9 L9,19 Z" />
+
+              <!-- 旅人 B -->
+              <circle cx="36" cy="13" r="6" />
+              <path d="M29,22 Q36,20 43,22 L44,39 L40,39 L39,54 L32,54 L31,39 L28,39 Z" />
+            </g>
+
+            <!-- 飛越晨曦的剪影飛鳥 -->
+            <g fill="none" stroke="#78350F" stroke-width="2" stroke-linecap="round" opacity="0.65">
+              <path d="M230,115 Q238,108 245,115 Q252,108 260,115" />
+              <path d="M275,95 Q281,89 287,95 Q293,89 299,95" />
+            </g>
+          </svg>
+
+          <!-- 插畫角落時光標籤 -->
+          <div class="absolute top-4 left-4 sm:top-5 sm:left-6 px-3.5 py-1.5 rounded-full bg-amber-950/70 backdrop-blur-md border border-amber-200/40 text-xs text-amber-100 flex items-center gap-2">
+            <span>✨</span>
+            <span class="tracking-wider font-medium">第三幕｜頂峰感悟・青春印記</span>
+          </div>
+        </div>
+
+        <!-- 第三段散文內容與金句框 -->
+        <div class="p-6 sm:p-10 md:p-12">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-4">
+            <span class="font-serif tracking-[0.2em] text-amber-800 font-semibold">CHAPTER 03 · 永恆閃耀</span>
+            <span>本段 89 字</span>
+          </div>
+
+          <p id="para-3" class="editorial-dropcap font-serif text-lg sm:text-xl md:text-[21px] leading-[2.05] text-slate-800 tracking-wide text-justify">這趟旅程不僅讓我領略了絕美的景色，更讓我深刻體會到堅持到底的意義。那些咬牙挺過的汗水與寒冷，最終都化作了頂峰上最絢爛的獎賞。這段在雲端迎接曙光的記憶，將永遠閃耀在我的青春時光裡。</p>
+
+          <!-- 詩意金句摘錄卡 -->
+          <blockquote class="mt-8 p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50/60 border-l-4 border-amber-500">
+            <p class="font-serif text-base sm:text-lg font-semibold text-amber-950 leading-relaxed">
+              「那些咬牙挺過的汗水與寒冷，最終都化作了頂峰上最絢爛的獎賞。」
+            </p>
+            <footer class="mt-2 text-xs text-amber-800/80 tracking-widest">
+              —— 雲端上的青春曙光・七月高山露營記
+            </footer>
+          </blockquote>
+        </div>
+      </section>
+
+    </article>
+
+    <!-- ==================== 文章字數統計與複製小卡 ==================== -->
+    <section id="word-stats" aria-label="文章字數統計" class="pt-4">
+      <div class="rounded-3xl bg-white shadow-[0_12px_40px_-15px_rgba(15,23,42,0.12)] border border-stone-200/90 p-6 sm:p-8 md:p-10">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-stone-200">
+          <div>
+            <span class="text-xs font-semibold tracking-[0.2em] text-amber-700 uppercase">TEXT ANALYTICS</span>
+            <h2 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 mt-1">
+              文章字數統計小卡
+            </h2>
+          </div>
+
+          <!-- 一鍵複製全文按鈕 -->
+          <button type="button" onclick="copyFullEssay()"
+                  class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 active:scale-95 text-white text-sm font-medium shadow-md shadow-amber-600/20 transition cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>一鍵複製全文</span>
+          </button>
+        </div>
+
+        <!-- 四大核心統計指標網格 -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+          <!-- 總字數（含標點符號） -->
+          <div class="rounded-2xl bg-amber-50/80 border border-amber-200/70 p-4 sm:p-5 text-center">
+            <div class="text-xs text-amber-800 font-medium mb-1">總字數（含標點符號）</div>
+            <div class="font-serif text-3xl sm:text-4xl font-black text-amber-700">
+              <span id="statTotalChars">352</span>
+              <span class="text-sm font-sans font-normal text-amber-800 ml-0.5">字</span>
+            </div>
+          </div>
+
+          <!-- 純文字字數 -->
+          <div class="rounded-2xl bg-stone-50 border border-stone-200/80 p-4 sm:p-5 text-center">
+            <div class="text-xs text-slate-500 font-medium mb-1">純中文字數</div>
+            <div class="font-serif text-3xl sm:text-4xl font-bold text-slate-800">
+              <span id="statPureChars">325</span>
+              <span class="text-sm font-sans font-normal text-slate-500 ml-0.5">字</span>
+            </div>
+          </div>
+
+          <!-- 標點符號數 -->
+          <div class="rounded-2xl bg-stone-50 border border-stone-200/80 p-4 sm:p-5 text-center">
+            <div class="text-xs text-slate-500 font-medium mb-1">標點符號</div>
+            <div class="font-serif text-3xl sm:text-4xl font-bold text-slate-800">
+              <span id="statPunctChars">27</span>
+              <span class="text-sm font-sans font-normal text-slate-500 ml-0.5">個</span>
+            </div>
+          </div>
+
+          <!-- 段落總數 -->
+          <div class="rounded-2xl bg-stone-50 border border-stone-200/80 p-4 sm:p-5 text-center">
+            <div class="text-xs text-slate-500 font-medium mb-1">文章段落</div>
+            <div class="font-serif text-3xl sm:text-4xl font-bold text-slate-800">
+              <span id="statParaCount">3</span>
+              <span class="text-sm font-sans font-normal text-slate-500 ml-0.5">段</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 各段細目條列 -->
+        <div class="mt-6 pt-5 border-t border-stone-100 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm text-slate-500">
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-1.5">
+            <span>• 第一段：<strong class="text-slate-700">116</strong> 字（純文字 107 字、標點 9 個）</span>
+            <span>• 第二段：<strong class="text-slate-700">147</strong> 字（純文字 135 字、標點 12 個）</span>
+            <span>• 第三段：<strong class="text-slate-700">89</strong> 字（純文字 83 字、標點 6 個）</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== 頁尾 ==================== -->
+  <footer class="border-t border-stone-200/80 bg-white/60 py-8 text-center text-xs text-slate-500">
+    <p class="font-serif tracking-widest text-slate-600">雲端上的青春曙光——七月高山露營記</p>
+    <p class="mt-1.5 text-slate-400">高山日出散文圖文典藏版</p>
+  </footer>
+
+  <!-- ==================== 複製成功提示 Toast（取代 alert） ==================== -->
+  <div id="copyToast" role="status" aria-live="polite"
+       class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 translate-y-3 transition-all duration-300">
+    <div class="px-5 py-3 rounded-2xl bg-slate-900/95 text-amber-100 text-sm font-medium shadow-xl border border-amber-400/30 flex items-center gap-2.5">
+      <span class="text-amber-400">✓</span>
+      <span id="copyToastMsg">已將完整散文（共 352 字）複製到剪貼簿！</span>
+    </div>
+  </div>
+
+  <!-- ==================== 互動邏輯腳本 ==================== -->
+  <script>
+    /**
+     * 顏色線性插值輔助函式 (Hex -> RGB 混合)
+     */
+    function lerpColor(hexA, hexB, t) {
+      const a = parseInt(hexA.slice(1), 16);
+      const b = parseInt(hexB.slice(1), 16);
+      const rA = (a >> 16) & 255, gA = (a >> 8) & 255, bA = a & 255;
+      const rB = (b >> 16) & 255, gB = (b >> 8) & 255, bB = b & 255;
+      const r = Math.round(rA + (rB - rA) * t);
+      const g = Math.round(gA + (gB - gA) * t);
+      const bl = Math.round(bA + (bB - bA) * t);
+      return `rgb(${r}, ${g}, ${bl})`;
+    }
+
+    // 取得 DOM 元素
+    const dawnSlider = document.getElementById('dawnSlider');
+    const heroHeader = document.getElementById('heroHeader');
+    const heroStarsGroup = document.getElementById('heroStarsGroup');
+    const heroSunGroup = document.getElementById('heroSunGroup');
+    const heroSunDisc = document.getElementById('heroSunDisc');
+
+    const scene2SunGroup = document.getElementById('scene2SunGroup');
+    const s2SkyTop = document.getElementById('s2SkyTop');
+    const s2SkyMid = document.getElementById('s2SkyMid');
+    const s2SkyBot = document.getElementById('s2SkyBot');
+    const s2MtnRim = document.getElementById('s2MtnRim');
+    const s2CloudTop = document.getElementById('s2CloudTop');
+
+    const timeIconBadge = document.getElementById('timeIconBadge');
+    const timePhaseTag = document.getElementById('timePhaseTag');
+    const timePhaseDesc = document.getElementById('timePhaseDesc');
+
+    let timelapseInterval = null;
+
+    /**
+     * 根據滑桿進度 (0 ~ 100) 即時更新頁面天空色調、太陽高度與插畫光影
+     */
+    function updateDawnAtmosphere(value) {
+      const val = Number(value);
+      const t = val / 100; // 0.0 -> 1.0
+
+      // 1. 計算三段式天空色彩插值 (0: 凌晨墨黑 -> 0.5: 破曉深藍 -> 1.0: 曙光金黃)
+      let skyTop, skyMid, skyBot, sunYHero, sunYScene2, starOpacity, mtnRimColor, cloudTopColor;
+
+      if (t <= 0.5) {
+        const localT = t * 2; // 0 ~ 1
+        skyTop = lerpColor('#050814', '#0F1E45', localT);
+        skyMid = lerpColor('#0F172A', '#1E3A8A', localT);
+        skyBot = lerpColor('#1E293B', '#C2410C', localT);
+        sunYHero = 85 - localT * 50;      // 85 -> 35
+        sunYScene2 = 95 - localT * 60;    // 95 -> 35
+        starOpacity = 0.95 - localT * 0.65;
+        mtnRimColor = lerpColor('#38BDF8', '#FB923C', localT);
+        cloudTopColor = lerpColor('#475569', '#FDBA74', localT);
+      } else {
+        const localT = (t - 0.5) * 2; // 0 ~ 1
+        skyTop = lerpColor('#0F1E45', '#1E3A5F', localT);
+        skyMid = lerpColor('#1E3A8A', '#D97706', localT);
+        skyBot = lerpColor('#C2410C', '#FDE047', localT);
+        sunYHero = 35 - localT * 45;      // 35 -> -10
+        sunYScene2 = 35 - localT * 55;    // 35 -> -20
+        starOpacity = Math.max(0, 0.3 - localT * 0.3);
+        mtnRimColor = lerpColor('#FB923C', '#FEF08A', localT);
+        cloudTopColor = lerpColor('#FDBA74', '#FFFBEB', localT);
+      }
+
+      // 套用至 Hero 背景與 SVG 太陽/星空
+      heroHeader.style.background = `linear-gradient(180deg, ${skyTop} 0%, ${skyMid} 52%, ${skyBot} 100%)`;
+      heroStarsGroup.setAttribute('opacity', starOpacity.toFixed(2));
+      heroSunGroup.setAttribute('transform', `translate(0, ${sunYHero.toFixed(1)})`);
+      heroSunDisc.setAttribute('opacity', Math.min(1, 0.25 + t * 0.85).toFixed(2));
+
+      // 套用至第二幕雲海日出插畫
+      s2SkyTop.setAttribute('stop-color', skyTop);
+      s2SkyMid.setAttribute('stop-color', skyMid);
+      s2SkyBot.setAttribute('stop-color', skyBot);
+      s2MtnRim.setAttribute('stop-color', mtnRimColor);
+      s2CloudTop.setAttribute('stop-color', cloudTopColor);
+      scene2SunGroup.setAttribute('transform', `translate(0, ${sunYScene2.toFixed(1)})`);
+
+      // 更新頁面整體環境底色微調
+      document.body.style.backgroundColor = lerpColor('#ECEAE4', '#FAF5EB', t);
+
+      // 更新控制器文字標籤與徽章狀態
+      if (val < 30) {
+        timeIconBadge.textContent = '🌌';
+        timeIconBadge.className = 'w-11 h-11 rounded-xl bg-slate-900 text-sky-300 flex items-center justify-center text-xl shadow-inner shrink-0 transition-colors duration-300';
+        timePhaseTag.textContent = '凌晨墨黑';
+        timePhaseTag.className = 'px-2 py-0.5 text-[11px] font-semibold rounded-full bg-slate-800 text-sky-200';
+        timePhaseDesc.textContent = '03:00 AM — 寒風刺骨的深夜山林，微光伴隨每一步前行';
+      } else if (val < 72) {
+        timeIconBadge.textContent = '🌄';
+        timeIconBadge.className = 'w-11 h-11 rounded-xl bg-indigo-100 text-indigo-800 flex items-center justify-center text-xl shadow-inner shrink-0 transition-colors duration-300';
+        timePhaseTag.textContent = '破曉深藍';
+        timePhaseTag.className = 'px-2 py-0.5 text-[11px] font-semibold rounded-full bg-indigo-100 text-indigo-800';
+        timePhaseDesc.textContent = '04:45 AM — 天邊由墨黑轉為深藍，雲海邊緣泛起第一道微光';
+      } else {
+        timeIconBadge.textContent = '☀️';
+        timeIconBadge.className = 'w-11 h-11 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shadow-inner shrink-0 transition-colors duration-300';
+        timePhaseTag.textContent = '曙光金黃';
+        timePhaseTag.className = 'px-2 py-0.5 text-[11px] font-semibold rounded-full bg-amber-100 text-amber-800';
+        timePhaseDesc.textContent = '05:20 AM — 太陽如熾熱明珠躍出雲海，群山與臉龐染成金黃';
+      }
+    }
+
+    /**
+     * 點擊快捷時刻按鈕設定進度
+     */
+    function setDawnProgress(targetValue) {
+      stopTimelapse();
+      dawnSlider.value = targetValue;
+      updateDawnAtmosphere(targetValue);
+    }
+
+    /**
+     * 切換「日出縮時」自動播放動畫
+     */
+    function toggleTimelapse() {
+      const btnText = document.getElementById('timelapseText');
+      const btnIcon = document.getElementById('timelapseIcon');
+
+      if (timelapseInterval) {
+        stopTimelapse();
+        return;
+      }
+
+      // 若已在 100%，則從 0% 凌晨三點開始重播日出過程
+      if (Number(dawnSlider.value) >= 98) {
+        dawnSlider.value = 0;
+        updateDawnAtmosphere(0);
+      }
+
+      btnText.textContent = '暫停縮時';
+      btnIcon.textContent = '❚❚';
+
+      timelapseInterval = setInterval(() => {
+        let current = Number(dawnSlider.value);
+        if (current >= 100) {
+          stopTimelapse();
+        } else {
+          current += 1;
+          dawnSlider.value = current;
+          updateDawnAtmosphere(current);
+        }
+      }, 45);
+    }
+
+    function stopTimelapse() {
+      if (timelapseInterval) {
+        clearInterval(timelapseInterval);
+        timelapseInterval = null;
+      }
+      document.getElementById('timelapseText').textContent = '日出縮時';
+      document.getElementById('timelapseIcon').textContent = '▶';
+    }
+
+    /**
+     * 動態計算並驗證文章字數統計
+     */
+    function calculateWordStats() {
+      const p1 = document.getElementById('para-1').textContent.trim();
+      const p2 = document.getElementById('para-2').textContent.trim();
+      const p3 = document.getElementById('para-3').textContent.trim();
+      const fullText = p1 + p2 + p3;
+
+      const totalChars = fullText.length;
+      const punctMatches = fullText.match(/[，。、；：！？「」『』（）—…]/g);
+      const punctCount = punctMatches ? punctMatches.length : 0;
+      const pureChars = totalChars - punctCount;
+
+      document.getElementById('statTotalChars').textContent = totalChars;
+      document.getElementById('statPureChars').textContent = pureChars;
+      document.getElementById('statPunctChars').textContent = punctCount;
+      document.getElementById('statParaCount').textContent = 3;
+    }
+
+    /**
+     * 一鍵複製完整散文至剪貼簿（使用相容性最高的 document.execCommand('copy')）
+     */
+    function copyFullEssay() {
+      const p1 = document.getElementById('para-1').textContent.trim();
+      const p2 = document.getElementById('para-2').textContent.trim();
+      const p3 = document.getElementById('para-3').textContent.trim();
+      const formattedEssay = `${p1}\n\n${p2}\n\n${p3}`;
+
+      const tempTextarea = document.createElement('textarea');
+      tempTextarea.value = formattedEssay;
+      tempTextarea.style.position = 'fixed';
+      tempTextarea.style.left = '-9999px';
+      document.body.appendChild(tempTextarea);
+      tempTextarea.select();
+
+      try {
+        document.execCommand('copy');
+        showToast('已將完整散文（共 352 字）複製到剪貼簿！');
+      } catch (err) {
+        showToast('複製失敗，請手動選取文字複製。');
+      } finally {
+        document.body.removeChild(tempTextarea);
+      }
+    }
+
+    /**
+     * 顯示底部溫和提示訊息框
+     */
+    let toastTimer = null;
+    function showToast(message) {
+      const toast = document.getElementById('copyToast');
+      const toastMsg = document.getElementById('copyToastMsg');
+      toastMsg.textContent = message;
+
+      toast.classList.remove('opacity-0', 'translate-y-3');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-3');
+      }, 2800);
+    }
+
+    // 綁定滑桿事件與頁面初始化
+    dawnSlider.addEventListener('input', (e) => {
+      stopTimelapse();
+      updateDawnAtmosphere(e.target.value);
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      calculateWordStats();
+      updateDawnAtmosphere(dawnSlider.value);
+    });
+  </script>
+</body>
+</html>
